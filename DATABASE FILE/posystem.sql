@@ -7,10 +7,6 @@
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
-CREATE DATABASE posystem;
-
-USE posystem;
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
