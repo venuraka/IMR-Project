@@ -4,7 +4,10 @@ $item = null;
 $value = null;
 $order = "id";
 
-$sales = ControllerSales::ctrAddingTotalSales();
+// $sales = ControllerSales::ctrAddingTotalSales();
+
+$controller = new ControllerSales(); // Create an instance
+$sales = $controller->ctrAddingTotalSales(); // Call the method
 
 $categories = ControllerCategories::ctrShowCategories($item, $value);
 $totalCategories = count($categories);
