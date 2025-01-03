@@ -76,8 +76,11 @@ $query_run = mysqli_query($conn, $query);
                           <td><?php  echo $row['Contact']; ?></td>
                           <td><?php  echo $row['Address']; ?></td>
                           <td><?php  echo $row['Email']; ?></td>
-                          <td> <button type="button" class="btn btn-success" href="deletecustomer.php?id=$row['CustomerID']">Edit Data</button>     
-                         <button type="button" class="btn btn-danger" href="updatecustomer.php?id=$row['CustomerID']">Delete Data</button>     </td>
+                          <td>
+                              <a href="updatecustomer.php?id=<?php echo $row['CustomerID']; ?>" class="btn btn-success">Edit Data</a>
+                              <a href="deletecustomer.php?id=<?php echo $row['CustomerID']; ?>" class="btn btn-danger">Delete Data</a>
+                          </td>
+
                       </tr>
                       <?php
                       }

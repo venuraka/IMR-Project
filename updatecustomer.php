@@ -8,23 +8,27 @@ $address = "";
 $email = "";
 $successMessage = "";
 
-if($_SERVER["REQUEST_METHOD"] == "GET") {
-  if(isset($_GET['id'])) {
-    $CId = $_GET['id'];
-    $sql = "SELECT * FROM customer WHERE CustomerID = '$CId'";
-    $result = mysqli_query($conn, $sql);
-
-    if(mysqli_num_rows($result) > 0) {
-      $row = mysqli_fetch_assoc($result);
-      $fname = $row['FirstName'];
-      $lname = $row['LastName'];
-      $contact = $row['Contact'];
-      $address = $row['Address'];
-      $email = $row['Email'];
-    }
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  if (!isset($_GET['id'])) {
+    header("Location: customer.php");
+    exit;
   }
-}
-else{
+  $CId = $_GET['id'];
+  $sql = "SELECT * FROM customer WHERE CustomerID = '$CId'";
+  $result = mysqli_query($conn, $sql);
+  $row = mysqli_fetch_assoc($result);
+
+  if (!$row) {
+    header("Location: customer.php");
+    exit;
+  }
+
+  $fname = $row['FirstName'];
+  $lname = $row['LastName'];
+  $contact = $row['Contact'];
+  $address = $row['Address'];
+  $email = $row['Email'];
+} else {
   $CId = $_POST['customerId'];
   $fname = $_POST['firstName'];
   $lname = $_POST['lastName'];
@@ -32,14 +36,23 @@ else{
   $address = $_POST['address'];
   $email = $_POST['email'];
 
+  // Check if the email already exists in the database
+  $checkEmailQuery = "SELECT * FROM customer WHERE Email = '$email' AND CustomerID != '$CId'";
+  $checkEmailResult = mysqli_query($conn, $checkEmailQuery);
+
+  if (mysqli_num_rows($checkEmailResult) > 0) {
+    echo "<script>alert('The email is already associated with another customer. Please use a different email.'); window.location.href = 'editcustomer.php?id=$CId';</script>";
+    exit();
+  }
+
+  // Update customer details if the email is unique
   $sql = "UPDATE customer SET FirstName = '$fname', LastName = '$lname', Contact = '$contact', Address = '$address', Email = '$email' WHERE CustomerID = '$CId'";
   $result = mysqli_query($conn, $sql);
 
-  if(!$result) {
-    $errorMessage = "Error: " . $sql . "<br>" . mysqli_error($conn);
+  if (!$result) {
+    echo "<script>alert('Error updating customer: " . mysqli_error($conn) . "');</script>";
   } else {
-    $successMessage = "Customer data has been updated successfully!";
-    header("Location: customer.php");
+    echo "<script>alert('Customer data has been updated successfully!'); window.location.href = 'customer.php';</script>";
     exit();
   }
 
@@ -110,7 +123,7 @@ else{
       </div>
       <div class="mb-3">
         <label for="address" class="form-label">Address</label>
-        <textarea class="form-control" id="address" name="address" placeholder="Enter Address" rows="3" value="<?php echo $address?>" required ></textarea>
+        <textarea class="form-control" id="address" name="address" placeholder="Enter Address" rows="3"  required ><?php echo $address;?></textarea>
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
