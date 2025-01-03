@@ -1,0 +1,128 @@
+<?php
+include('dbcon.php');
+$CId = "";
+$fname = "";
+$lname = "";
+$contact = "";
+$address = "";
+$email = "";
+$successMessage = "";
+
+if($_SERVER["REQUEST_METHOD"] == "GET") {
+  if(isset($_GET['id'])) {
+    $CId = $_GET['id'];
+    $sql = "SELECT * FROM customer WHERE CustomerID = '$CId'";
+    $result = mysqli_query($conn, $sql);
+
+    if(mysqli_num_rows($result) > 0) {
+      $row = mysqli_fetch_assoc($result);
+      $fname = $row['FirstName'];
+      $lname = $row['LastName'];
+      $contact = $row['Contact'];
+      $address = $row['Address'];
+      $email = $row['Email'];
+    }
+  }
+}
+else{
+  $CId = $_POST['customerId'];
+  $fname = $_POST['firstName'];
+  $lname = $_POST['lastName'];
+  $contact = $_POST['contact'];
+  $address = $_POST['address'];
+  $email = $_POST['email'];
+
+  $sql = "UPDATE customer SET FirstName = '$fname', LastName = '$lname', Contact = '$contact', Address = '$address', Email = '$email' WHERE CustomerID = '$CId'";
+  $result = mysqli_query($conn, $sql);
+
+  if(!$result) {
+    $errorMessage = "Error: " . $sql . "<br>" . mysqli_error($conn);
+  } else {
+    $successMessage = "Customer data has been updated successfully!";
+    header("Location: customer.php");
+    exit();
+  }
+
+  mysqli_close($conn);
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <!-- nav bar start-->
+  <nav class="navbar navbar-expand-lg navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+    <!-- nav bar end-->
+    <div class="container mt-4">
+    <?php if (!empty($successMessage)): ?>
+    <div class="alert alert-success" role="alert">
+      <?php echo $successMessage; ?>
+    </div>
+  <?php endif; ?>
+    <h2 class="mb-4">Add Customer</h2>
+    <form method="post">
+    <div class="mb-3">
+        <label for="customerId" class="form-label">Customer ID</label>
+        <input type="text" class="form-control" id="customerId" name="customerId" value="<?php echo $CId; ?>" readonly>
+    </div>
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter First Name" value="<?php echo $fname?>" required>
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter Last Name" value="<?php echo $lname?>" required>
+      </div>
+      <div class="mb-3">
+        <label for="contact" class="form-label">Contact</label>
+        <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter Contact Number" value="<?php echo $contact?>" required>
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea class="form-control" id="address" name="address" placeholder="Enter Address" rows="3" value="<?php echo $address?>" required ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" value="<?php echo $email?>" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+      <button type="reset" class="btn btn-secondary" onclick="window.location.href='customer.php'">Cancel</button>
+    </form>
+  </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
