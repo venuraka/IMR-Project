@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <aside class="bg-dark text-white p-3" style="width: 250px;">
+            <h2 class="text-center">POS Dashboard</h2>
+            <nav>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link text-white" href="#overview">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#sales">Sales</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#inventory">Inventory</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#customers">Customers</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#reports">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#settings">Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-grow-1 p-4">
+            <header class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, Admin</span>
+                </div>
+            </header>
+
+            <!-- Overview Section -->
+            <section id="overview" class="row g-3">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Sales</h3>
+                            <p class="card-text fs-4">$12,345</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Products in Stock</h3>
+                            <p class="card-text fs-4">1,234</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Customers</h3>
+                            <p class="card-text fs-4">567</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Today's Transactions</h3>
+                            <p class="card-text fs-4">89</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sales Section -->
+            <section id="sales" class="my-5">
+                <h2>Sales Overview</h2>
+                <canvas id="salesChart" style="max-height: 400px;"></canvas>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory" class="my-5">
+                <h2>Inventory Status</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product A</td>
+                            <td>100</td>
+                            <td>$10.00</td>
+                        </tr>
+                        <tr>
+                            <td>Product B</td>
+                            <td>50</td>
+                            <td>$15.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Customers Section -->
+            <section id="customers" class="my-5">
+                <h2>Customer List</h2>
+                <ul class="list-group">
+                    <li class="list-group-item">Customer A</li>
+                    <li class="list-group-item">Customer B</li>
+                    <li class="list-group-item">Customer C</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chart.js Initialization
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: [1200, 1900, 3000, 5000, 2300, 3400, 4800],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
