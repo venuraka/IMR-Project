@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
-
     mysqli_close($conn);
 }
 ?>
@@ -84,10 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2 class="mb-4">Add Customer</h2>
     <form method="post">
       <!-- use this function for show ID if neded -->
-    <div class="mb-3">
-        <label for="customerId" class="form-label">Customer ID</label>
-        <input type="text" class="form-control" id="customerId" name="customerId" value="<?php echo $newId ?>" readonly>
-    </div>
+    
       <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
         <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter First Name" value="<?php echo $fname?>" required>

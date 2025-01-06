@@ -1,5 +1,35 @@
 <?php
 include('dbcon.php');
+$products = mysqli_query($conn, "
+    SELECT p.*, s.SupplierName, c.Name as CategoryName 
+    FROM Product p
+    LEFT JOIN Supplier s ON p.SupplierID = s.SupplierID
+    LEFT JOIN Category c ON p.CategoryID = c.CategoryID
+");
+
+
+// Query to get top customers based on loyalty points
+$sql = "SELECT CustomerID, LoyaltyPoints FROM Loyalty ORDER BY LoyaltyPoints DESC";
+$result = $conn->query($sql);
+
+// Initialize arrays for data
+$customerIDs = [];
+$loyaltyPoints = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $customerIDs[] = "Customer " . $row['CustomerID']; // Adding "Customer" prefix for better labeling
+        $loyaltyPoints[] = $row['LoyaltyPoints'];
+    }
+}
+
+// Convert data to JSON for JavaScript
+$customerIDsJSON = json_encode($customerIDs);
+$loyaltyPointsJSON = json_encode($loyaltyPoints);
+
+$query = "SELECT * FROM Employee";
+$employees = mysqli_query($conn, $query);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,10 +128,10 @@ include('dbcon.php');
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <h3 class="card-title">Today's Transactions</h3>
+                            <h3 class="card-title">Total Loyalty Customers</h3>
                             <p class="card-text fs-4">
                             <?php 
-                                            $sql = "SELECT SUM(TotalAmount) AS totalSum FROM Sale";
+                                            $sql = "SELECT COUNT(*) FROM `Loyalty`";
                                             $result = mysqli_query($conn, $sql);
                                             $count = mysqli_fetch_row($result)[0];
 
@@ -184,9 +214,9 @@ include('dbcon.php');
             </section>
 
             <!-- Sales Section -->
-            <div style="width: 80%; margin: auto; " class="p-5" >
-        <canvas id="loyaltyChart"></canvas>
-             </div>
+            <div style="width: 80%; margin: auto; padding: 20px;">
+        <canvas id="loyaltyBarChart"></canvas>
+    </div>
 
             <!-- Inventory Section -->
             <section id="inventory" class="my-5">
@@ -194,34 +224,56 @@ include('dbcon.php');
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Stock</th>
-                            <th>Price</th>
+                                  <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Cost Price</th>
+                                    <th>Supplier</th>
+                                    <th>Category</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Product A</td>
-                            <td>100</td>
-                            <td>$10.00</td>
-                        </tr>
-                        <tr>
-                            <td>Product B</td>
-                            <td>50</td>
-                            <td>$15.00</td>
-                        </tr>
+                    <?php while ($row = mysqli_fetch_assoc($products)): ?>
+                                    <tr>
+                                        <td><?php echo $row['ProductID']; ?></td>
+                                        <td><?php echo $row['ProductName']; ?></td>
+                                        <td><?php echo $row['Price']; ?></td>
+                                        <td><?php echo $row['CostPrice']; ?></td>
+                                        <td><?php echo $row['SupplierName']; ?></td>
+                                        <td><?php echo $row['CategoryName']; ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
                     </tbody>
                 </table>
             </section>
 
             <!-- Customers Section -->
             <section id="customers" class="my-5">
-                <h2>Customer List</h2>
-                <ul class="list-group">
-                    <li class="list-group-item">Customer A</li>
-                    <li class="list-group-item">Customer B</li>
-                    <li class="list-group-item">Customer C</li>
-                </ul>
+                <h2>Employee List</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                                  <th>ID</th>
+                                    <th>Name</th>
+                                    <th>DOB</th>
+                                    <th>Join Date</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($employees)): ?>
+                                    <tr>
+                                        <td><?php echo $row['EmployeeId']; ?></td>
+                                        <td><?php echo $row['FirstName'] . ' ' . $row['LastName']; ?></td>
+                                        <td><?php echo $row['DOB']; ?></td>
+                                        <td><?php echo $row['JoinDate']; ?></td>
+                                        <td><?php echo $row['Contact']; ?></td>
+                                        <td><?php echo $row['Email']; ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                    </tbody>
+                </table>
             </section>
         </main>
     </div>
@@ -229,74 +281,49 @@ include('dbcon.php');
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-          // Create the chart using the PHP data
-    const ctx = document.getElementById('loyaltyChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: <?php echo $labelsJSON; ?>,
-            datasets: [
-                {
-                    label: 'Number of Members',
-                    data: <?php echo $memberCountsJSON; ?>,
-                    backgroundColor: [
-                        'rgba(255, 215, 0, 0.6)',  // Gold
-                        'rgba(192, 192, 192, 0.6)', // Silver
-                        'rgba(205, 127, 50, 0.6)'   // Bronze
-                    ],
-                    borderColor: [
-                        'rgba(255, 215, 0, 1)',
-                        'rgba(192, 192, 192, 1)',
-                        'rgba(205, 127, 50, 1)'
-                    ],
-                    borderWidth: 1,
-                    yAxisID: 'y'
-                },
-                {
-                    label: 'Average Points',
-                    data: <?php echo $avgPointsJSON; ?>,
-                    type: 'line',
+        // Data from PHP
+        const customerIDs = <?php echo $customerIDsJSON; ?>;
+        const loyaltyPoints = <?php echo $loyaltyPointsJSON; ?>;
+
+        // Create the bar chart
+        const ctx = document.getElementById('loyaltyBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: customerIDs,
+                datasets: [{
+                    label: 'Loyalty Points',
+                    data: loyaltyPoints,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                    yAxisID: 'y1'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    type: 'linear',
-                    position: 'left',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
                     title: {
                         display: true,
-                        text: 'Number of Members'
+                        text: 'Top Customers by Loyalty Points'
                     }
                 },
-                y1: {
-                    type: 'linear',
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Average Points'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Loyalty Points'
+                        }
                     },
-                    grid: {
-                        drawOnChartArea: false
-                    }
-                }
-            },
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Loyalty Program Distribution',
-                    font: {
-                        size: 16
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Customers'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
     </script>
 </body>
 </html>
