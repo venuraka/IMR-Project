@@ -4,21 +4,21 @@ $query = "SELECT * FROM Discount";
 $suppliers = mysqli_query($conn, $query);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $ProductID = $_POST['ProductID'];
-  $name = $_POST['Name'];
-  $percentage = $_POST['Percentage'];
-  $valiedfrom = $_POST['Valiedfrom'];
-  $valiedto = $_POST['Valiedto'];
+    $ProductID = $_POST['ProductID'];
+    $name = $_POST['name'];  
+    $percentage = $_POST['percentage'];  
+    $valiedfrom = $_POST['valiedfrom'];  
+    $valiedto = $_POST['valiedto'];  
 
-  $stmt = $conn->prepare("INSERT INTO Discount (ProductID, DiscountName, DiscountPercentage, ValidFrom, ValidTo)");
-  $stmt->bind_param("sssss", $ProductID, $name, $percentage, $valiedfrom, $valiedto);
+    $stmt = $conn->prepare("INSERT INTO Discount (ProductID, DiscountName, DiscountPercentage, ValidFrom, ValidTo) VALUES (?, ?, ?, ?, ?)");  // added VALUES clause
+    $stmt->bind_param("sssss", $ProductID, $name, $percentage, $valiedfrom, $valiedto);
 
-  if ($stmt->execute()) {
-      header('Location: discount.php?success=Discount added successfully');
-  } else {
-      header('Location: discount.php?error=' . $conn->error);
-  }
-  exit();
+    if ($stmt->execute()) {
+        header('Location: discount.php?success=Discount added successfully');
+    } else {
+        header('Location: discount.php?error=' . $conn->error);
+    }
+    exit();
 }
 
 ?>
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" >
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">POS System</a>
             <div class="ms-auto">
