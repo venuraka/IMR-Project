@@ -1,6 +1,18 @@
-.navbar{
-  background-color: #37AFE1 !important;
+.navbar {
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
 }
-.maincard{
+
+.maincard {
   background-color: #7cffc4 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.action-buttons {
+  min-width: 160px;
 }

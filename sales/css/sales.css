@@ -1,0 +1,54 @@
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.quantity-input {
+  width: 80px;
+}
+
+.remove-product {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.bill-header {
+  border-bottom: 1px solid #ddd;
+}
+
+.bill-info {
+  font-size: 0.9rem;
+}
+
+.bill-items {
+  margin: 20px 0;
+}
+
+.bill-footer {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  font-size: 0.9rem;
+}
+
+.table-sm td,
+.table-sm th {
+  padding: 0.3rem;
+}
