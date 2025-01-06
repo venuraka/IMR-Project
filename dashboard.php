@@ -145,10 +145,79 @@ $avgPointsJSON = json_encode($avgPoints);
                         </div>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Avalable Discounts</h3>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Discount`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Employes</h3>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Employee`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Number Of Transaction Today</h3>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Payment`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Number Of Suppliyers</h3>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Supplier`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </section>
 
             <!-- Sales Section -->
-            <div style="width: 80%; margin: auto;">
+            <div style="width: 80%; margin: auto; " class="p-5" >
         <canvas id="loyaltyChart"></canvas>
              </div>
 
