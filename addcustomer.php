@@ -8,20 +8,20 @@ $email = "";
 $successMessage = "";
 $errorMessage = "";
 // setting the initial value of id
-// $newId = 1;
+$newId = 1;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
  //use this function for auto increment of ID if neded
 
-  // $query = "SELECT MAX(CustomerID) AS maxId FROM customer";
-  //   $result = mysqli_query($conn, $query);
-  //   $newId = 1;
+  $query = "SELECT MAX(CustomerID) AS maxId FROM customer";
+    $result = mysqli_query($conn, $query);
+    $newId = 1;
 
-  //   if (mysqli_num_rows($result) > 0) {
-  //       $row = mysqli_fetch_assoc($result);
-  //       $newId = $row['maxId'] + 1;
-  //   }
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $newId = $row['maxId'] + 1;
+    }
 
     $fname = $_POST['firstName'];
     $lname = $_POST['lastName'];
@@ -37,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errorMessage = "The email '$email' is already registered!";
     } else {
         // Insert the new record
-        $sql = "INSERT INTO customer ( FirstName, LastName, Contact, Address, Email) 
-                VALUES ('$fname', '$lname', '$contact', '$address', '$email')";
+        $sql = "INSERT INTO customer ( CustomerID,FirstName, LastName, Contact, Address, Email) 
+                VALUES ('$newId','$fname', '$lname', '$contact', '$address', '$email')";
         $result = mysqli_query($conn, $sql);
 
         if (!$result) {
@@ -100,10 +100,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2 class="mb-4">Add Customer</h2>
     <form method="post">
       <!-- use this function for show ID if neded -->
-    <!-- <div class="mb-3">
+    <div class="mb-3">
         <label for="customerId" class="form-label">Customer ID</label>
-        <input type="text" class="form-control" id="customerId" name="customerId" value="<?php echo $newId; ?>" readonly>
-    </div> -->
+        <input type="text" class="form-control" id="customerId" name="customerId" value="<?php echo $newId ?>" readonly>
+    </div>
       <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
         <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter First Name" value="<?php echo $fname?>" required>
