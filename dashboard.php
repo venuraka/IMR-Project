@@ -1,42 +1,5 @@
 <?php
 include('dbcon.php');
-// Query to get loyalty points data
-$sql = "SELECT 
-            CASE 
-                WHEN l.LoyaltyPoints >= 1 THEN 'Gold'
-                WHEN l.LoyaltyPoints >= 2 THEN 'Silver'
-                ELSE 'Bronze'
-            END AS membership_level,
-            COUNT(*) as member_count,
-            AVG(l.LoyaltyPoints) as avg_points
-        FROM LoyaltyCustomer l
-        GROUP BY 
-            CASE 
-                WHEN l.LoyaltyPoints >= 1 THEN 'Gold'
-                WHEN l.LoyaltyPoints >= 2 THEN 'Silver'
-                ELSE 'Bronze'
-            END";
-
-$result = $conn->query($sql);
-
-// Initialize arrays to store data
-$labels = [];
-$memberCounts = [];
-$avgPoints = [];
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $labels[] = $row["membership_level"];
-        $memberCounts[] = $row["member_count"];
-        $avgPoints[] = round($row["avg_points"], 2);
-    }
-} 
-
-
-// Convert data to JSON for JavaScript
-$labelsJSON = json_encode($labels);
-$memberCountsJSON = json_encode($memberCounts);
-$avgPointsJSON = json_encode($avgPoints);
 ?>
 <!DOCTYPE html>
 <html lang="en">
