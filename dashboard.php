@@ -32,8 +32,6 @@ if ($result->num_rows > 0) {
     }
 } 
 
-// Close connection
-$conn->close();
 
 // Convert data to JSON for JavaScript
 $labelsJSON = json_encode($labels);
@@ -75,9 +73,7 @@ $avgPointsJSON = json_encode($avgPoints);
         <main class="flex-grow-1 p-4">
             <header class="d-flex justify-content-between align-items-center mb-4">
                 <h1>Dashboard</h1>
-                <div class="user-info">
-                    <span>Welcome, Admin</span>
-                </div>
+           
             </header>
 
             <!-- Overview Section -->
@@ -85,24 +81,50 @@ $avgPointsJSON = json_encode($avgPoints);
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <h3 class="card-title">Total Sales</h3>
-                            <p class="card-text fs-4">$12,345</p>
+                            <h3 class="card-title">Total Customers</h3>
+                            <p class="card-text fs-4">       
+                                    <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Customer`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <h3 class="card-title">Products in Stock</h3>
-                            <p class="card-text fs-4">1,234</p>
+                            <h3 class="card-title">Total Cashiers</h3>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT COUNT(*) FROM `Cashier`";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <h3 class="card-title">Customers</h3>
-                            <p class="card-text fs-4">567</p>
+                            <h3 class="card-title">Total Items on stock</h3>
+                            <p class="card-text fs-4">
+                                <?php
+                                $sql = "SELECT COUNT(*) FROM `Product`";
+                                $result = mysqli_query($conn, $sql);
+                                $count = mysqli_fetch_row($result)[0];
+                                // Display the number of records
+                                echo $count;
+                                ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -110,7 +132,16 @@ $avgPointsJSON = json_encode($avgPoints);
                     <div class="card text-center">
                         <div class="card-body">
                             <h3 class="card-title">Today's Transactions</h3>
-                            <p class="card-text fs-4">89</p>
+                            <p class="card-text fs-4">
+                            <?php 
+                                            $sql = "SELECT SUM(TotalAmount) AS totalSum FROM Sale";
+                                            $result = mysqli_query($conn, $sql);
+                                            $count = mysqli_fetch_row($result)[0];
+
+                                            // Display the number of records
+                                            echo $count;
+                                      ?>
+                            </p>
                         </div>
                     </div>
                 </div>
