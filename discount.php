@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <h5 class="card-title">Add New Discount</h5>
                         <form method="POST">
     <div class="mb-3">
-        <input type="text" name="ProductID" class="form-control" placeholder="Discount ID" required>
+        <input type="text" name="ProductID" class="form-control" placeholder="Product ID" required>
     </div>
     <div class="mb-3">
         <input type="text" name="name" class="form-control" placeholder="Discount Name" required>
