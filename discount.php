@@ -4,18 +4,23 @@ $query = "SELECT * FROM Discount";
 $suppliers = mysqli_query($conn, $query);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $ProductID = $_POST['ProductID'];
-    $name = $_POST['name'];
-    $percentage = $_POST['percentage'];
-    $valiedfrom = $_POST['valiedfrom'];
-    $valiedto = $_POST['valiedto'];
+  $ProductID = $_POST['ProductID'];
+  $name = $_POST['Name'];
+  $percentage = $_POST['Percentage'];
+  $valiedfrom = $_POST['Valiedfrom'];
+  $valiedto = $_POST['Valiedto'];
 
-    $sql = "INSERT INTO Discount (ProductID,DiscountName, DiscountPercentage, ValidFrom, ValidTo) 
-            VALUES ('$ProductID','$name', '$percentage', '$valiedfrom', '$valiedto')";
-    mysqli_query($conn, $sql);
-    header('Location: discount.php');
-    exit();
+  $stmt = $conn->prepare("INSERT INTO Discount (ProductID, DiscountName, DiscountPercentage, ValidFrom, ValidTo)");
+  $stmt->bind_param("sssss", $ProductID, $name, $percentage, $valiedfrom, $valiedto);
+
+  if ($stmt->execute()) {
+      header('Location: discount.php?success=Discount added successfully');
+  } else {
+      header('Location: discount.php?error=' . $conn->error);
+  }
+  exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,20 +57,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="card-body">
                         <h5 class="card-title">Add New Discount</h5>
                         <form method="POST">
-                            <div class="mb-3">
-                                <input type="text" name="name" class="form-control" placeholder="Discount Name" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="text" name="percentage" class="form-control" placeholder="Discount percentage" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="date" name="valiedfrom" class="form-control" placeholder="valied From" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="date" name="valiedto" class="form-control" placeholder="Valied To" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Add Discount</button>
-                        </form>
+    <div class="mb-3">
+        <input type="text" name="ProductID" class="form-control" placeholder="Discount ID" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Discount Name" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="percentage" class="form-control" placeholder="Discount Percentage" required>
+    </div>
+    <div class="mb-3">
+        <input type="date" name="valiedfrom" class="form-control" placeholder="Valid From" required>
+    </div>
+    <div class="mb-3">
+        <input type="date" name="valiedto" class="form-control" placeholder="Valid To" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Discount</button>
+</form>
+
                     </div>
                 </div>
             </div>
@@ -87,17 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <tbody>
                                 <?php while ($row = mysqli_fetch_assoc($suppliers)): ?>
                                     <tr>
-                                        <td><?php echo $row['ProductID']; ?></td>
-                                        <td><?php echo $row['Name']; ?></td>
-                                        <td><?php echo $row['percentage']; ?></td>
-                                        <td><?php echo $row['valiedfrom']; ?></td>
-                                        <td><?php echo $row['valiedto']; ?></td>
+                                    <td><?php echo $row['ProductID']; ?></td>
+<td><?php echo $row['DiscountName']; ?></td>
+<td><?php echo $row['DiscountPercentage']; ?></td>
+<td><?php echo $row['ValidFrom']; ?></td>
+<td><?php echo $row['ValidTo']; ?></td>
                                         <td>
-                                            <a href="update_supplier.php?id=<?php echo $row['ProductID']; ?>"
-                                                class="btn btn-primary btn-sm">Edit</a>
-                                            <a href="delete_supplier.php?id=<?php echo $row['ProductID']; ?>"
-                                                class="btn btn-danger btn-sm"
-                                                onclick="return confirm('Are you sure you want to delete this supplier?')">Delete</a>
+                                        <a href="update_discount.php?id=<?php echo $row['ProductID']; ?>" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="delete_discount.php?id=<?php echo $row['ProductID']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this discount?')">Delete</a>
+
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
