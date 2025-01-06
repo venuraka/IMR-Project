@@ -59,6 +59,7 @@ $employees = mysqli_query($conn, $query);
                     <li class="nav-item"><a class="nav-link text-white" href="customer.php">Customers</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="regular_customer.php">Regular Customers</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="stock.php">Stock</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="discount.php">Discount</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="sales.php">New Sale</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="sale_report.php">Sales Report</a></li>
 
